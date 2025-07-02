@@ -23,6 +23,24 @@ class DinnerScheduler {
         // Set default date to next Monday
         const nextMondayDate = DateUtils.getNextMonday();
         document.getElementById('dinner-date').value = nextMondayDate;
+        
+        // Populate member checkboxes
+        this.populateMemberCheckboxes();
+    }
+
+    /**
+     * Populate member checkboxes dynamically
+     */
+    populateMemberCheckboxes() {
+        const checkboxContainer = document.getElementById('reserved-slots-checkboxes');
+        const members = ClubMembers.getAllMembers();
+        
+        checkboxContainer.innerHTML = members.map(member => `
+            <label class="checkbox-label">
+                <input type="checkbox" name="reservedSlots" value="${member}" class="checkbox-input">
+                <span class="checkbox-text">${member}</span>
+            </label>
+        `).join('');
     }
 
     /**
@@ -84,10 +102,8 @@ class DinnerScheduler {
      * Extract data from form
      */
     extractFormData(formData) {
-        const reservedSlotsText = formData.get('reservedSlots');
-        const reservedSlots = reservedSlotsText 
-            ? reservedSlotsText.split(',').map(name => name.trim()).filter(name => name)
-            : [];
+        // Get selected member checkboxes
+        const reservedSlots = formData.getAll('reservedSlots') || [];
 
         return {
             id: this.currentEditingId,
@@ -97,7 +113,7 @@ class DinnerScheduler {
             address: formData.get('restaurantAddress') || null,
             reservationMade: formData.get('reservationMade') === 'true',
             reservedSlots,
-            openSlots: parseInt(formData.get('openSlots')) || 0
+            totalSeats: parseInt(formData.get('totalSeats')) || 6
         };
     }
 
@@ -185,6 +201,7 @@ class DinnerScheduler {
         ).length;
         const totalConfirmed = dinner.getConfirmedCount();
         const availableSlots = dinner.getAvailableOpenSlots();
+        const openSlots = dinner.getOpenSlots();
 
         return `
             <div class="dinner-card" data-dinner-id="${dinner.id}">
@@ -208,20 +225,20 @@ class DinnerScheduler {
                         <div class="dinner-card__address">${dinner.address}</div>
                     ` : ''}
                     
-                    <div class="dinner-card__slots">
-                        <span class="dinner-card__slot-info">
-                            ${totalConfirmed} confirmed of ${dinner.getTotalSeats()} total seats
-                        </span>
-                        ${availableSlots > 0 ? `
-                            <span class="dinner-card__slot-info">
-                                ${availableSlots} slots available
-                            </span>
-                        ` : `
-                            <span class="dinner-card__slot-info" style="background: #fee2e2; color: #991b1b;">
-                                Fully Booked
-                            </span>
-                        `}
-                    </div>
+                                         <div class="dinner-card__slots">
+                         <span class="dinner-card__slot-info">
+                             ${totalConfirmed} confirmed of ${dinner.totalSeats} total seats
+                         </span>
+                         ${availableSlots > 0 ? `
+                             <span class="dinner-card__slot-info">
+                                 ${availableSlots} slots available
+                             </span>
+                         ` : `
+                             <span class="dinner-card__slot-info" style="background: #fee2e2; color: #991b1b;">
+                                 Fully Booked
+                             </span>
+                         `}
+                     </div>
                     
                     <div class="dinner-card__reservation">
                         <span>Reservation:</span>
@@ -290,8 +307,13 @@ class DinnerScheduler {
         document.getElementById('dinner-time').value = dinner.time;
         document.getElementById('restaurant-name').value = dinner.restaurant || '';
         document.getElementById('restaurant-address').value = dinner.address || '';
-        document.getElementById('reserved-slots').value = dinner.reservedSlots.join(', ');
-        document.getElementById('open-slots').value = dinner.openSlots;
+        document.getElementById('total-seats').value = dinner.totalSeats;
+        
+        // Set reserved slots checkboxes
+        const checkboxes = document.querySelectorAll('input[name="reservedSlots"]');
+        checkboxes.forEach(checkbox => {
+            checkbox.checked = dinner.reservedSlots.includes(checkbox.value);
+        });
         
         // Set reservation radio button
         const reservationValue = dinner.reservationMade.toString();
@@ -339,6 +361,13 @@ class DinnerScheduler {
     resetForm() {
         this.form.reset();
         this.currentEditingId = null;
+        
+        // Clear all checkboxes explicitly
+        const checkboxes = document.querySelectorAll('input[name="reservedSlots"]');
+        checkboxes.forEach(checkbox => {
+            checkbox.checked = false;
+        });
+        
         this.initializeForm();
         this.hideCancelButton();
         document.querySelector('.btn--primary').textContent = 'Create Dinner';

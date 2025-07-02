@@ -39,13 +39,15 @@
                     </div>
 
                     <div class="form-group">
-                        <label for="reserved-slots" class="form-label">Reserved Slots (comma-separated names)</label>
-                        <input type="text" id="reserved-slots" name="reservedSlots" class="form-input" placeholder="John, Jane, Bob">
+                        <label class="form-label">Reserved Slots (select members)</label>
+                        <div id="reserved-slots-checkboxes" class="checkbox-group">
+                            <!-- Dynamically populated by JavaScript -->
+                        </div>
                     </div>
 
                     <div class="form-group">
-                        <label for="open-slots" class="form-label">Number of Open Slots</label>
-                        <input type="number" id="open-slots" name="openSlots" class="form-input" min="0" max="20" value="3">
+                        <label for="total-seats" class="form-label">Total Number of Seats</label>
+                        <input type="number" id="total-seats" name="totalSeats" class="form-input" min="1" max="30" value="6">
                     </div>
 
                     <div class="form-group">

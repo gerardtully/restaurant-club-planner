@@ -16,7 +16,7 @@ class Dinner {
         address = null,
         reservationMade = false,
         reservedSlots = [],
-        openSlots = 3,
+        totalSeats = 6,
         attendees = [],
         declines = [],
         createdAt = new Date().toISOString()
@@ -28,7 +28,7 @@ class Dinner {
         this.address = address;
         this.reservationMade = reservationMade;
         this.reservedSlots = Array.isArray(reservedSlots) ? reservedSlots : [];
-        this.openSlots = parseInt(openSlots) || 0;
+        this.totalSeats = parseInt(totalSeats) || 6;
         this.attendees = Array.isArray(attendees) ? attendees : [];
         this.declines = Array.isArray(declines) ? declines : [];
         this.createdAt = createdAt;
@@ -68,10 +68,10 @@ class Dinner {
     }
 
     /**
-     * Get total number of available seats
+     * Get number of open slots (total seats minus reserved slots)
      */
-    getTotalSeats() {
-        return this.reservedSlots.length + this.openSlots;
+    getOpenSlots() {
+        return Math.max(0, this.totalSeats - this.reservedSlots.length);
     }
 
     /**
@@ -90,7 +90,7 @@ class Dinner {
         const declinedReservedSlots = this.reservedSlots.filter(name => 
             this.declines.includes(name)
         ).length;
-        return this.openSlots + declinedReservedSlots - this.attendees.length;
+        return this.getOpenSlots() + declinedReservedSlots - this.attendees.length;
     }
 
     /**
@@ -114,8 +114,12 @@ class Dinner {
             errors.push('Time is required');
         }
 
-        if (this.openSlots < 0) {
-            errors.push('Open slots cannot be negative');
+        if (this.totalSeats < 1) {
+            errors.push('Total seats must be at least 1');
+        }
+
+        if (this.reservedSlots.length > this.totalSeats) {
+            errors.push('Reserved slots cannot exceed total seats');
         }
 
         // Check if date is valid
@@ -141,7 +145,7 @@ class Dinner {
             address: this.address,
             reservationMade: this.reservationMade,
             reservedSlots: this.reservedSlots,
-            openSlots: this.openSlots,
+            totalSeats: this.totalSeats,
             attendees: this.attendees,
             declines: this.declines,
             createdAt: this.createdAt
@@ -256,6 +260,38 @@ class DinnerStorage {
 }
 
 /**
+ * Restaurant Club Members
+ * Predefined list of club members for reserved slots
+ */
+class ClubMembers {
+    static MEMBERS = [
+        'Gerard',
+        'Nicholas', 
+        'Levi',
+        'Steven',
+        'Bernardo'
+    ];
+
+    /**
+     * Get all club members
+     */
+    static getAllMembers() {
+        return [...this.MEMBERS];
+    }
+
+    /**
+     * Add a new member (for future expansion)
+     */
+    static addMember(name) {
+        if (name && !this.MEMBERS.includes(name)) {
+            this.MEMBERS.push(name);
+            return true;
+        }
+        return false;
+    }
+}
+
+/**
  * Utility Functions
  */
 class DateUtils {
@@ -271,10 +307,12 @@ class DateUtils {
     }
 
     /**
-     * Format date for display
+     * Format date for display (fixes timezone issues)
      */
     static formatDisplayDate(dateString) {
-        const date = new Date(dateString);
+        // Parse date in local timezone to avoid UTC conversion issues
+        const [year, month, day] = dateString.split('-');
+        const date = new Date(parseInt(year), parseInt(month) - 1, parseInt(day));
         const options = { 
             weekday: 'long', 
             year: 'numeric', 
@@ -299,4 +337,5 @@ class DateUtils {
 // Make classes available globally
 window.Dinner = Dinner;
 window.DinnerStorage = DinnerStorage;
-window.DateUtils = DateUtils; 
+window.DateUtils = DateUtils;
+window.ClubMembers = ClubMembers; 
