@@ -1,0 +1,195 @@
+# Project Development Rules Template
+
+> Adapt this template for your specific technology stack
+
+## Core Development Principles
+
+### 🎯 Guiding Philosophy
+1. **Quality Over Speed**: Write it right the first time
+2. **User-Centric Design**: Every decision should improve user experience
+3. **Maintainable Code**: Future developers (including yourself) will thank you
+4. **Performance Matters**: Optimize for real-world usage patterns
+
+### 🏗️ Architecture Patterns
+
+#### [Your Architecture Pattern]
+```
+Example structure:
+- Presentation Layer: [Description]
+- Business Logic Layer: [Description]
+- Data Layer: [Description]
+```
+
+### 📋 Development Standards
+
+#### Code Organization
+- **File Naming**: [Your convention, e.g., PascalCase, kebab-case]
+- **Folder Structure**: [Your organization pattern]
+- **Module Boundaries**: [How to separate concerns]
+
+#### Code Style
+```[language]
+// Example of your preferred style
+function exampleFunction(param) {
+    // Implementation following your standards
+}
+```
+
+### 🚀 Implementation Guidelines
+
+#### Feature Development
+1. **Plan First**: Design before coding
+2. **Test Driven**: Write tests alongside implementation
+3. **Incremental Progress**: Small, working commits
+4. **Documentation**: Update as you go
+
+#### Common Patterns
+- **[Pattern 1]**: When to use and example
+- **[Pattern 2]**: When to use and example
+- **[Pattern 3]**: When to use and example
+
+### 🧪 Testing Requirements
+
+#### Test Categories
+1. **Unit Tests**: [Coverage target, e.g., 80%]
+2. **Integration Tests**: [Key flows to test]
+3. **UI/E2E Tests**: [Critical user paths]
+
+#### Test Structure
+```[language]
+describe('[Feature]', () => {
+    it('should [expected behavior]', () => {
+        // Arrange
+        // Act
+        // Assert
+    });
+});
+```
+
+### 🐛 Debugging Strategies
+
+#### Common Issues
+1. **[Issue Type 1]**
+   - Symptoms: [What you'll see]
+   - Common Cause: [Why it happens]
+   - Solution: [How to fix]
+
+2. **[Issue Type 2]**
+   - Symptoms: [What you'll see]
+   - Common Cause: [Why it happens]
+   - Solution: [How to fix]
+
+### 📦 Dependency Management
+
+#### Adding Dependencies
+- **Evaluate Need**: Can you achieve this without a dependency?
+- **Check License**: Ensure compatibility
+- **Review Security**: Check for known vulnerabilities
+- **Document Usage**: Why was this added?
+
+### 🔒 Security Practices
+
+#### Data Handling
+- **Never** commit secrets or API keys
+- **Always** validate user input
+- **Use** environment variables for configuration
+- **Implement** proper authentication/authorization
+
+#### Code Security
+- [Specific security practices for your stack]
+- [Common vulnerabilities to avoid]
+- [Security tools to use]
+
+### 🎨 UI/UX Guidelines (if applicable)
+
+#### Design System
+- **Colors**: Use defined color variables
+- **Typography**: Consistent font usage
+- **Spacing**: Follow grid system
+- **Components**: Reuse existing components
+
+#### Accessibility
+- **ARIA Labels**: Required for interactive elements
+- **Keyboard Navigation**: Full app usability without mouse
+- **Color Contrast**: WCAG AA compliance minimum
+- **Screen Readers**: Test with assistive technology
+
+### 🚢 Deployment Process
+
+#### Pre-deployment Checklist
+- [ ] All tests passing
+- [ ] Code reviewed and approved
+- [ ] Documentation updated
+- [ ] Performance benchmarks met
+- [ ] Security scan completed
+
+#### Deployment Steps
+1. [Step 1]
+2. [Step 2]
+3. [Step 3]
+
+### 📊 Performance Guidelines
+
+#### Metrics to Monitor
+- **[Metric 1]**: Target value
+- **[Metric 2]**: Target value
+- **[Metric 3]**: Target value
+
+#### Optimization Strategies
+- [Strategy 1]: When and how to apply
+- [Strategy 2]: When and how to apply
+- [Strategy 3]: When and how to apply
+
+### 🔄 Version Control
+
+#### Commit Messages
+```
+[type]([scope]): [subject]
+
+[optional body]
+
+[optional footer]
+```
+
+Types: feat, fix, docs, style, refactor, test, chore
+
+#### Branch Strategy
+- `main`: Production-ready code
+- `develop`: Integration branch
+- `feature/*`: New features
+- `bugfix/*`: Bug fixes
+- `hotfix/*`: Emergency fixes
+
+### 📝 Documentation Requirements
+
+#### Code Documentation
+- **Functions**: Purpose, parameters, return values
+- **Complex Logic**: Explain the why, not the what
+- **APIs**: Full endpoint documentation
+- **Configuration**: All options explained
+
+#### Project Documentation
+- **README**: Keep it current
+- **CHANGELOG**: Track all changes
+- **API Docs**: Auto-generate when possible
+- **Guides**: User and developer guides
+
+### ⚡ Quick Commands
+
+```bash
+# Development
+[your dev command]
+
+# Testing
+[your test command]
+
+# Build
+[your build command]
+
+# Deploy
+[your deploy command]
+```
+
+---
+
+**Remember**: These rules are living documentation. Update them as the project evolves!

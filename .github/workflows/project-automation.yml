@@ -1,0 +1,87 @@
+name: Project Board Automation
+
+on:
+  issues:
+    types: [opened, closed, assigned, unassigned, labeled]
+  pull_request:
+    types: [opened, closed, review_requested, converted_to_draft]
+
+jobs:
+  add-to-project:
+    name: Add to Project Board
+    runs-on: ubuntu-latest
+    steps:
+      - name: Add Issue to Project
+        uses: actions/add-to-project@v0.5.0
+        with:
+          project-url: https://github.com/users/seanacres/projects/1
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          
+  update-status:
+    name: Update Project Status
+    runs-on: ubuntu-latest
+    steps:
+      - name: Update Status Based on Labels
+        uses: actions/github-script@v7
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            const issue = context.payload.issue || context.payload.pull_request;
+            if (!issue) return;
+            
+            const labels = issue.labels.map(l => l.name);
+            let status = 'Backlog';
+            
+            if (labels.includes('in-progress')) {
+              status = 'In Progress';
+            } else if (labels.includes('ready')) {
+              status = 'Ready';
+            } else if (labels.includes('needs-review')) {
+              status = 'In Review';
+            } else if (labels.includes('blocked')) {
+              status = 'Blocked';
+            } else if (issue.state === 'closed') {
+              status = 'Done';
+            }
+            
+            // Update project item status
+            console.log(`Would update issue #${issue.number} to status: ${status}`);
+            
+  assign-by-area:
+    name: Auto-assign by Area
+    runs-on: ubuntu-latest
+    if: github.event.action == 'opened' && github.event.issue
+    steps:
+      - name: Assign Based on Labels
+        uses: actions/github-script@v7
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            const issue = context.payload.issue;
+            const labels = issue.labels.map(l => l.name);
+            
+            // Assignment map based on expertise areas
+            const assignments = {
+              'voice-interface': ['seanacres'],
+              'theme': ['seanacres'],
+              'widget': ['seanacres'],
+              'backend': ['seanacres'],
+              'security': ['seanacres'],
+              'ui-ux': ['seanacres']
+            };
+            
+            let assignees = [];
+            for (const [label, users] of Object.entries(assignments)) {
+              if (labels.includes(label)) {
+                assignees.push(...users);
+              }
+            }
+            
+            if (assignees.length > 0) {
+              await github.rest.issues.addAssignees({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                issue_number: issue.number,
+                assignees: [...new Set(assignees)]
+              });
+            }

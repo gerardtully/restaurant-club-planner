@@ -1,0 +1,175 @@
+name: Assignment Validation
+
+on:
+  pull_request:
+    types: [opened, reopened, edited, synchronize]
+
+permissions:
+  contents: read
+  issues: write
+  pull-requests: write
+
+jobs:
+  check-assignment:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check PR body for issue reference
+        id: extract-issue
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const pr = context.payload.pull_request;
+            const body = pr.body || '';
+            
+            // Look for issue references in PR body
+            const patterns = [
+              /(?:fixes|closes|resolves)\s+#(\d+)/gi,
+              /(?:issue)\s+#(\d+)/gi,
+              /#(\d+)/g
+            ];
+            
+            let issueNumbers = [];
+            for (const pattern of patterns) {
+              const matches = body.matchAll(pattern);
+              for (const match of matches) {
+                issueNumbers.push(match[1]);
+              }
+            }
+            
+            // Remove duplicates
+            issueNumbers = [...new Set(issueNumbers)];
+            
+            if (issueNumbers.length === 0) {
+              core.warning('No issue reference found in PR body');
+              return null;
+            }
+            
+            console.log(`Found issue references: ${issueNumbers.join(', ')}`);
+            return issueNumbers;
+
+      - name: Validate issue assignments
+        if: steps.extract-issue.outputs.result != 'null'
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const issueNumbers = ${{ steps.extract-issue.outputs.result }};
+            const prAuthor = context.payload.pull_request.user.login;
+            let hasUnassignedIssue = false;
+            let hasAssignmentMismatch = false;
+            const messages = [];
+            
+            for (const issueNumber of issueNumbers) {
+              try {
+                const issue = await github.rest.issues.get({
+                  owner: context.repo.owner,
+                  repo: context.repo.repo,
+                  issue_number: parseInt(issueNumber)
+                });
+                
+                const assignees = issue.data.assignees.map(a => a.login);
+                
+                if (assignees.length === 0) {
+                  hasUnassignedIssue = true;
+                  messages.push(`❌ Issue #${issueNumber} is not assigned to anyone`);
+                } else if (!assignees.includes(prAuthor)) {
+                  hasAssignmentMismatch = true;
+                  messages.push(`⚠️  Issue #${issueNumber} is assigned to ${assignees.join(', ')} but PR is from @${prAuthor}`);
+                } else {
+                  messages.push(`✅ Issue #${issueNumber} is properly assigned to @${prAuthor}`);
+                }
+                
+                // Add work-in-progress label to the issue
+                if (assignees.includes(prAuthor)) {
+                  await github.rest.issues.addLabels({
+                    owner: context.repo.owner,
+                    repo: context.repo.repo,
+                    issue_number: parseInt(issueNumber),
+                    labels: ['in-progress']
+                  }).catch(err => {
+                    console.log(`Could not add label to issue #${issueNumber}: ${err.message}`);
+                  });
+                }
+                
+              } catch (error) {
+                messages.push(`⚠️  Could not check issue #${issueNumber}: ${error.message}`);
+              }
+            }
+            
+            // Post comment with results
+            const comment = `## 👤 Assignment Check Results
+            
+            ${messages.join('\n')}
+            
+            ${hasUnassignedIssue ? '\n**Action Required**: Please assign the issue(s) to yourself before this PR can be merged.' : ''}
+            ${hasAssignmentMismatch ? '\n**Note**: You are working on an issue assigned to someone else. Please coordinate with the assignee(s).' : ''}
+            `;
+            
+            await github.rest.issues.createComment({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: context.issue.number,
+              body: comment
+            });
+            
+            // Fail the check if there are unassigned issues
+            if (hasUnassignedIssue) {
+              core.setFailed('PR references unassigned issue(s). Please assign the issue(s) before proceeding.');
+            }
+
+      - name: Check for work duplication
+        uses: actions/github-script@v7
+        with:
+          script: |
+            // Get all open PRs
+            const allPRs = await github.rest.pulls.list({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              state: 'open'
+            });
+            
+            const currentPR = context.payload.pull_request;
+            const currentPRIssues = ${{ steps.extract-issue.outputs.result }} || [];
+            
+            // Check if any other PR is working on the same issues
+            const conflictingPRs = [];
+            
+            for (const pr of allPRs.data) {
+              if (pr.number === currentPR.number) continue;
+              
+              const prBody = pr.body || '';
+              const issueMatches = prBody.match(/(?:fixes|closes|resolves|issue)\s+#(\d+)/gi) || [];
+              
+              for (const match of issueMatches) {
+                const issueNumber = match.match(/#(\d+)/)[1];
+                if (currentPRIssues.includes(issueNumber)) {
+                  conflictingPRs.push({
+                    pr: pr.number,
+                    issue: issueNumber,
+                    author: pr.user.login
+                  });
+                }
+              }
+            }
+            
+            if (conflictingPRs.length > 0) {
+              const conflicts = conflictingPRs.map(c => 
+                `- PR #${c.pr} by @${c.author} is also working on issue #${c.issue}`
+              ).join('\n');
+              
+              const comment = `## ⚠️  Potential Work Duplication Detected
+              
+              Other open PRs appear to be working on the same issue(s):
+              
+              ${conflicts}
+              
+              Please coordinate with the other contributors to avoid duplicate work.`;
+              
+              await github.rest.issues.createComment({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                issue_number: context.issue.number,
+                body: comment
+              });
+              
+              core.warning('Potential work duplication detected with other PRs');
+            }

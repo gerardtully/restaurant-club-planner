@@ -1,0 +1,112 @@
+name: Validate Newcomer Standard
+
+on:
+  issues:
+    types: [opened, edited]
+
+jobs:
+  validate-issue:
+    runs-on: ubuntu-latest
+    permissions:
+      issues: write
+      
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+        
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+          
+      - name: Validate Issue Format
+        uses: actions/github-script@v7
+        with:
+          github-token: ${{secrets.GITHUB_TOKEN}}
+          script: |
+            const fs = require('fs');
+            const path = require('path');
+            
+            // Load the validator script
+            const validatorPath = path.join(process.env.GITHUB_WORKSPACE, '.github/scripts/validate-newcomer-standard.js');
+            const NewcomerStandardValidator = require(validatorPath);
+            
+            // Use the external validator
+            const issue = context.payload.issue;
+            const validator = new NewcomerStandardValidator(
+              issue.body || '',
+              issue.title || '',
+              issue.labels.map(l => l.name)
+            );
+            
+            const result = validator.validate();
+            
+            if (!result.valid || result.warnings.length > 0) {
+              // Format the validation report
+              const formatReportPath = path.join(process.env.GITHUB_WORKSPACE, '.github/scripts/format-validation-report.js');
+              const formatReport = require(formatReportPath);
+              
+              const comment = formatReport(result);
+              
+              // Post or update comment
+              const comments = await github.rest.issues.listComments({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                issue_number: issue.number
+              });
+              
+              const botComment = comments.data.find(c => 
+                c.user.type === 'Bot' && 
+                c.body.includes('Newcomer Standard Validation')
+              );
+              
+              if (botComment) {
+                await github.rest.issues.updateComment({
+                  owner: context.repo.owner,
+                  repo: context.repo.repo,
+                  comment_id: botComment.id,
+                  body: comment
+                });
+              } else {
+                await github.rest.issues.createComment({
+                  owner: context.repo.owner,
+                  repo: context.repo.repo,
+                  issue_number: issue.number,
+                  body: comment
+                });
+              }
+              
+              // Manage labels
+              if (!result.valid) {
+                await github.rest.issues.addLabels({
+                  owner: context.repo.owner,
+                  repo: context.repo.repo,
+                  issue_number: issue.number,
+                  labels: ['needs-refinement']
+                });
+              }
+            } else {
+              // Issue passes - remove needs-refinement, add ready
+              console.log('Issue passes Newcomer Standard validation');
+              
+              try {
+                await github.rest.issues.removeLabel({
+                  owner: context.repo.owner,
+                  repo: context.repo.repo,
+                  issue_number: issue.number,
+                  name: 'needs-refinement'
+                });
+              } catch (e) {
+                // Label might not exist, that's ok
+              }
+              
+              const currentLabels = issue.labels.map(l => l.name);
+              if (!currentLabels.includes('ready') && !currentLabels.includes('in-progress')) {
+                await github.rest.issues.addLabels({
+                  owner: context.repo.owner,
+                  repo: context.repo.repo,
+                  issue_number: issue.number,
+                  labels: ['ready']
+                });
+              }
+            }

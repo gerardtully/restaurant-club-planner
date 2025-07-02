@@ -1,0 +1,8 @@
+blank_issues_enabled: false
+contact_links:
+  - name: 🤔 Not Sure Which Template?
+    url: https://github.com/seanacres/mindly/issues/26
+    about: Read our Newcomer Standard guide to understand how to create effective issues
+  - name: 💬 Discussions
+    url: https://github.com/seanacres/mindly/discussions
+    about: For questions, ideas, and general discussions

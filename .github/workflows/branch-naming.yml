@@ -1,0 +1,70 @@
+name: Branch Naming Convention
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+
+jobs:
+  check-branch-name:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check Branch Name
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const branchName = context.payload.pull_request.head.ref;
+            console.log(`Checking branch name: ${branchName}`);
+            
+            // Valid branch patterns
+            const validPatterns = [
+              /^feature\/issue-\d+-.+$/,
+              /^fix\/issue-\d+-.+$/,
+              /^docs\/issue-\d+-.+$/,
+              /^refactor\/issue-\d+-.+$/,
+              /^design\/issue-\d+-.+$/,
+              /^main$/,
+              /^develop$/
+            ];
+            
+            const isValid = validPatterns.some(pattern => pattern.test(branchName));
+            
+            if (!isValid) {
+              core.setFailed(`
+                ❌ Invalid branch name: ${branchName}
+                
+                Branch names must follow the pattern:
+                {type}/issue-{number}-{description}
+                
+                Valid types: feature, fix, docs, refactor, design
+                
+                Examples:
+                ✅ feature/issue-123-add-voice-recognition
+                ✅ fix/issue-456-resolve-crash
+                ✅ docs/issue-789-update-readme
+                
+                Please rename your branch using:
+                git branch -m ${branchName} feature/issue-XXX-description
+                git push origin -d ${branchName}
+                git push origin -u feature/issue-XXX-description
+              `);
+            } else {
+              console.log('✅ Branch name is valid!');
+              
+              // Extract issue number
+              const issueMatch = branchName.match(/issue-(\d+)/);
+              if (issueMatch) {
+                const issueNumber = issueMatch[1];
+                console.log(`Branch references issue #${issueNumber}`);
+                
+                // Add comment to PR if not already linked
+                const prBody = context.payload.pull_request.body || '';
+                if (!prBody.includes(`#${issueNumber}`)) {
+                  await github.rest.issues.createComment({
+                    issue_number: context.payload.pull_request.number,
+                    owner: context.repo.owner,
+                    repo: context.repo.repo,
+                    body: `📌 This PR appears to be related to issue #${issueNumber} based on the branch name. Consider adding \`Fixes #${issueNumber}\` to the PR description for automatic issue closure.`
+                  });
+                }
+              }
+            }

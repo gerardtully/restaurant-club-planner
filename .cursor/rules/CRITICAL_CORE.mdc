@@ -1,0 +1,362 @@
+---
+description: Universal development principles and critical protocols for any project
+globs: **/*
+alwaysApply: true
+---
+
+# 🚨 CRITICAL CORE RULES - UNIVERSAL PRINCIPLES
+
+**⚠️ MANDATORY: Read this file BEFORE any development action**
+
+These are universal development principles applicable to any project. Project-specific rules should be maintained in separate documentation.
+
+## 🔧 FILE CREATION & EDITING PROTOCOL
+
+**🚨 FILE EDIT FAILURES - MOST COMMON ISSUE:**
+- **NEVER** attempt large file edits (>500 lines) in single operation
+- **ALWAYS** use incremental approach for large files
+- **IF** edit_file shows "no changes made" → STOP and use alternative approach
+
+**✅ CORRECT FILE CREATION PATTERN:**
+```bash
+# 1. Create file first
+touch filename.ext
+
+# 2. Then edit in small chunks
+edit_file with <200 lines max per edit
+```
+
+**🔄 FALLBACK STRATEGIES:**
+1. **Large File Updates**: Break into 3-5 smaller sections
+2. **Edit Failures**: Use search_replace for specific changes
+3. **New Files**: Always touch first, then edit
+4. **Complex Changes**: Create new file, then replace original
+
+## ⚡ EFFICIENCY MANDATES
+
+**🎯 SINGLE-PASS IMPLEMENTATION:**
+- **ANALYZE** requirements completely before starting
+- **PLAN** entire approach in thinking section
+- **EXECUTE** in logical sequence without iteration
+- **VERIFY** success before moving to next step
+
+**❌ ANTI-PATTERNS TO AVOID:**
+- Multiple attempts at same approach
+- Large file operations without chunking
+- Complex operations without fallback plan
+- Continuing failed approach patterns
+
+## 🧠 THINKING PROTOCOL
+
+**💭 REQUIRED ANALYSIS BEFORE ACTION:**
+- What is the specific goal?
+- What are potential failure points?
+- What is the fallback strategy?
+- How can this be done in minimum steps?
+
+**⚡ DECISION MAKING:**
+- Choose simplest approach that works
+- Prioritize incremental progress over perfection
+- Stop and reassess after any failure
+- Always have Plan B ready
+
+## 🚀 SUCCESS METRICS
+
+**✅ EVERY ACTION MUST:**
+- Complete in <3 attempts
+- Show measurable progress
+- Have clear success criteria
+- Include fallback if primary fails
+
+**📊 EFFICIENCY TARGETS:**
+- File operations: First attempt success
+- Task completion: Single session
+- Problem solving: <2 iteration cycles
+- Documentation: Incremental updates
+
+## 🔄 CONTINUOUS IMPROVEMENT
+
+**⚡ ACTIVE MONITORING MANDATE:**
+- **ALWAYS** scan for improvement opportunities during every interaction
+- **PROACTIVELY** suggest rule updates when patterns are detected
+- **IMMEDIATELY** flag when existing rules could be enhanced
+- **NEVER** accept tool limitations - FIX THE TOOL
+
+**📋 IMPROVEMENT TRIGGERS:**
+- New code patterns not covered by existing rules
+- Repeated implementations that could be standardized
+- Common error patterns that need prevention
+- Tool limitations that should be fixed (not documented)
+- Performance/security patterns needing enforcement
+
+**🎯 SUGGESTION FORMAT:**
+When improvement opportunity detected:
+```
+📋 **IMPROVEMENT OPPORTUNITY:**
+Pattern: [What you observed]
+Current Gap: [What's missing]
+Solution: [Specific fix/enhancement]
+Benefit: [Why this improves workflow]
+```
+
+**🔧 TOOL EVOLUTION PRINCIPLE:**
+- **NEVER** document tool limitations as workarounds
+- **ALWAYS** fix tools to be production-reliable
+- **VALIDATE** improvements with measurable metrics
+- **MAINTAIN** zero tolerance for technical debt
+
+## 🎨 API DESIGN PRINCIPLES
+
+**🔍 The Autocomplete Test**: Every API must be understandable from IDE autocomplete alone
+- ❌ BAD: `surface1`, `surface2`, `surface3` (what do these mean?)
+- ✅ GOOD: `surfaceCard`, `surfaceModal`, `surfaceDropdown` (self-explanatory)
+
+**📍 The Context Principle**: Names must indicate WHEN to use, not just WHAT it is
+- ❌ BAD: `primaryColor` (primary for what?)
+- ✅ GOOD: `buttonPrimary`, `textHeading`, `brandAccent` (clear usage context)
+
+**👶 The Newcomer Standard**: Design every API as if the user knows nothing about your system
+- No numbered sequences without semantic meaning
+- No abstract terms that require documentation lookup
+- No "you just have to know" patterns
+- Every choice should be obvious from the name alone
+
+**📈 Progressive Disclosure**: Simple things simple, complex things possible
+- Default methods for 80% use cases
+- Advanced options discoverable through IDE
+- Clear upgrade path from simple to advanced usage
+
+**🏗️ Group by Intent, Not Type**:
+```swift
+// ❌ BAD - Grouped by technical type
+Theme.colors.primary
+Theme.colors.primaryText
+Theme.colors.primaryPressed
+
+// ✅ GOOD - Grouped by developer intent
+Theme.button.background
+Theme.button.text  
+Theme.button.pressed
+```
+
+## 🚨 INTERRUPTION PROTOCOL
+
+**⚡ WHEN USER INTERRUPTS INPUT:**
+- **IMMEDIATELY** recognize as rule improvement opportunity
+- **ALWAYS** suggest specific rule enhancement based on interruption context
+- **PROPOSE** concrete rule updates to prevent future similar issues
+- **DOCUMENT** the pattern that caused interruption for rule evolution
+
+**🔧 CORE RULE STRUCTURE MANDATE:**
+- **MAINTAIN** minimal rule sets to avoid fragmentation
+- **CONSOLIDATE** related patterns into existing rules
+- **PRESERVE** clarity through focused rule files
+- **PREVENT** rule sprawl through regular consolidation
+
+## 🏗️ BUILD VALIDATION PRINCIPLES
+
+**⚡ UNIVERSAL BUILD REQUIREMENTS:**
+- **ALWAYS** validate builds after code changes
+- **NEVER** mark tasks complete without successful build
+- **IMMEDIATELY** fix build failures before proceeding
+- **VERIFY** functionality before considering work done
+
+**📊 BUILD SUCCESS CRITERIA:**
+- Compilation without errors
+- All tests passing
+- No new warnings introduced
+- Performance metrics maintained
+
+## 🚀 CI/CD VALIDATION PROTOCOL
+
+**🚨 MANDATORY CI/CD AWARENESS:**
+- **ALWAYS** check CI/CD status before marking work complete
+- **NEVER** consider PR ready without passing all checks
+- **IMMEDIATELY** investigate failing checks as improvement opportunities
+- **PROACTIVELY** enhance rules based on CI/CD patterns
+
+**📊 CI/CD CHECK CATEGORIES:**
+1. **Assignment Checks** - PR must have assignee/reviewer
+2. **Code Quality** - Linting, formatting, style compliance
+3. **Build Validation** - Compilation, tests, performance
+4. **Security Scanning** - Vulnerability detection, secrets
+5. **Documentation** - Link validation, completeness
+
+**⚡ FAILING CHECK RESPONSE:**
+1. **STOP** - Don't continue with failing checks
+2. **ANALYZE** - Understand root cause, not just symptom
+3. **RESEARCH** - Search for best practices if unsure
+4. **FIX** - Address systematically, verify each fix
+5. **ENHANCE** - Update rules to prevent recurrence
+
+**🔧 COMMON CI/CD FIXES:**
+- **Assignment**: `gh issue edit <ID> --add-assignee <user>`
+- **Linting**: Use automated tools (SwiftLint, ESLint, etc.)
+- **Whitespace**: `find . -name "*.ext" -exec sed -i '' 's/[[:space:]]*$//' {} \;`
+- **Build**: Run local validation before push
+- **Tests**: Ensure coverage for new code
+
+**📋 CI/CD RULE ENHANCEMENT TRIGGERS:**
+- Multiple PRs with same failure pattern
+- New check types not in current rules
+- Performance degradation patterns
+- Security vulnerability patterns
+- Documentation drift indicators
+
+## 🎯 USER FEEDBACK PRINCIPLES
+
+**🚨 FEEDBACK INTERPRETATION:**
+- **Emotional reactions** predict success better than features
+- **Negative feedback** requires immediate pivot
+- **Positive validation** means lock in and resist changes
+- **User confusion** indicates design failure, not user error
+
+**⚡ ITERATION PATTERNS:**
+1. **Generate Options** - Multiple variations for comparison
+2. **Get Gut Reactions** - Emotional response before analysis
+3. **Focus on Concerns** - Fix problems, don't add features
+4. **Address Root Causes** - Don't patch symptoms
+5. **Preserve Winners** - Resist "improving" what works
+
+## 🎨 DESIGN SYSTEM PRINCIPLES
+
+**🏆 THE GOLDEN RULE:**
+**Simple Core + Rich Environment = Award-Winning Design**
+
+**📋 CORE DESIGN PRINCIPLES:**
+1. **User Feedback is King** - Real reactions trump design theory
+2. **Iterate with Purpose** - Each iteration solves specific concerns
+3. **Preserve What Works** - Don't change approved designs without need
+4. **AI is a Tool, Not a Designer** - Guide with clear constraints
+5. **Document Everything** - Design decisions fade from memory
+
+**🏗️ THEME SYSTEM ARCHITECTURE:**
+- **Semantic naming** prevents refactors when visuals change
+- **Multiple variants** allow A/B testing and preferences
+- **Component isolation** means theme changes don't break functionality
+- **Performance matters** - theme switches should be instant
+
+**✅ THEME SYSTEM PATTERN:**
+```swift
+// Semantic color system survives visual pivots
+struct ThemeColors {
+    let primary: Color      // Can change without code updates
+    let secondary: Color    // Theme system adapts
+    let background: Color   // No massive refactors needed
+}
+```
+
+## 📋 DOCUMENTATION PRINCIPLES
+
+**✅ DOCUMENTATION REQUIREMENTS:**
+- **ALWAYS** update documentation with functionality changes
+- **NEVER** let documentation lag behind implementation
+- **IMMEDIATELY** reflect architectural decisions
+- **MAINTAIN** single source of truth for each topic
+
+**🔧 DOCUMENTATION STRUCTURE:**
+- Clear hierarchy and navigation
+- Examples over explanations
+- Practical over theoretical
+- Current over comprehensive
+
+## 🔧 TOOL VERIFICATION PROTOCOL
+
+**🚨 MANDATORY: Always verify tool state before making effectiveness claims**
+
+**✅ CORRECT EVALUATION WORKFLOW:**
+1. **LOCATE** tool/script in question
+2. **EXAMINE** current implementation and features  
+3. **TEST** tool functionality on current codebase
+4. **ANALYZE** results and effectiveness
+5. **DECIDE** based on verified data
+
+**❌ ASSUMPTIONS WITHOUT VERIFICATION:**
+- Making claims without testing
+- Choosing approaches without verification
+- Tool dismissal without investigation
+- Preference-based over data-based decisions
+
+**📋 PRE-IMPLEMENTATION ANALYSIS:**
+1. **READ** existing code/tools completely
+2. **UNDERSTAND** current implementation state
+3. **TEST** functionality before making claims
+4. **IDENTIFY** actual blockers vs assumptions
+5. **CHOOSE** approach based on verified data
+
+## 🚨 TERMINAL SAFETY PROTOCOLS
+
+**⚡ CHARACTER ESCAPING (MANDATORY):**
+- **NEVER** use unescaped newlines in terminal commands
+- **NEVER** use unescaped quotes without proper shell escaping
+- **ALWAYS** use single quotes for literal strings
+- **ALWAYS** escape special shell characters: `$`, backticks, `\`, `|`, `&`, `;`, `(`, `)`, `<`, `>`
+- **ALWAYS** use appropriate tools for multi-line content
+
+**🛡️ COMMIT MESSAGE SAFETY:**
+- **ALWAYS** use single quotes for commit messages
+- **MAXIMUM** 72 characters for commit message title
+- **NO** embedded newlines, bullets, or complex formatting
+- **FOCUS** on single, specific change per commit
+- **AVOID** special characters that break git commands
+
+**✅ SAFE COMMAND PATTERNS:**
+```bash
+# Safe commit
+git commit -m 'feat: Add feature description'
+
+# Safe file creation
+touch 'filename.ext'
+echo 'simple content' > 'filename.ext'
+
+# Safe file operations
+rm 'specific/file.txt'
+mkdir -p 'directory/path'
+```
+
+**📊 COMMAND VALIDATION:**
+- Verify command syntax before execution
+- Check file/directory existence
+- Validate permissions
+- Confirm destructive operation intent
+- Monitor for error messages
+
+## 📝 RULE WRITING GUIDELINES
+
+**🏗️ RULE STRUCTURE:**
+```markdown
+---
+description: Clear, one-line description of what the rule enforces
+globs: path/to/files/*.ext, other/path/**/*
+alwaysApply: boolean
+---
+
+# Rule Title
+
+**Main Points in Bold**
+- Sub-points with details
+- Examples and explanations
+```
+
+**✅ RULE CONTENT BEST PRACTICES:**
+- Start with high-level overview
+- Include specific, actionable requirements
+- Show examples of correct implementation
+- Reference existing code when possible
+- Keep rules DRY by referencing other rules
+- Use DO and DON'T examples
+- Maintain consistent formatting
+
+**🔧 RULE MAINTENANCE:**
+- Update when new patterns emerge
+- Add examples from actual codebase
+- Remove outdated patterns
+- Cross-reference related rules
+- Consolidate to prevent fragmentation
+
+---
+
+**🎯 CORE PRINCIPLE: PROGRESS OVER PERFECTION**
+**⚡ EFFICIENCY OVER ELEGANCE**
+**🔄 ADAPTATION OVER REPETITION**
+**🔧 FIX THE TOOL, DON'T DOCUMENT LIMITATIONS**

@@ -1,0 +1,43 @@
+version: 2
+updates:
+  # Enable version updates for Swift Package Manager
+  - package-ecosystem: "swift"
+    directory: "/iOS/PersonalRepoCapture"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+      time: "09:00"
+    reviewers:
+      - "seanacres"
+    labels:
+      - "dependencies"
+      - "ios"
+    open-pull-requests-limit: 5
+    
+  # Enable version updates for pip (Python)
+  - package-ecosystem: "pip"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+      time: "09:00"
+    reviewers:
+      - "seanacres"
+    labels:
+      - "dependencies"
+      - "backend"
+    open-pull-requests-limit: 5
+    
+  # Enable version updates for GitHub Actions
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+      time: "09:00"
+    reviewers:
+      - "seanacres"
+    labels:
+      - "dependencies"
+      - "ci/cd"
+    open-pull-requests-limit: 3
