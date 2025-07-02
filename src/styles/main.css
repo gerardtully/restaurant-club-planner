@@ -1,0 +1,419 @@
+/* Reset and Base Styles */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/* Import Google Fonts */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Chewy&display=swap');
+
+body {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    line-height: 1.6;
+    color: #1f2937;
+    background: white;
+    min-height: 100vh;
+}
+
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 1rem;
+}
+
+/* Header */
+.header {
+    text-align: center;
+    padding: 3rem 0;
+    background: linear-gradient(135deg, #b54cef 0%, #9333ea 100%);
+    color: white;
+    margin-bottom: 2rem;
+    box-shadow: 0 8px 32px rgba(181, 76, 239, 0.3);
+}
+
+.header__title {
+    font-family: "Chewy", system-ui;
+    font-size: 2.5rem;
+    font-weight: 400;
+    font-style: normal;
+    margin-bottom: 0.5rem;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.header__subtitle {
+    font-size: 1.2rem;
+    opacity: 0.95;
+    font-weight: 400;
+}
+
+/* Main Content */
+.main {
+    display: grid;
+    gap: 2rem;
+    margin-bottom: 2rem;
+}
+
+.section-title {
+    font-family: "Chewy", system-ui;
+    font-size: 1.8rem;
+    font-weight: 400;
+    font-style: normal;
+    margin-bottom: 1.5rem;
+    color: #b54cef;
+}
+
+/* Form Styles */
+.dinner-form-section {
+    background: white;
+    padding: 2rem;
+    border-radius: 16px;
+    box-shadow: 0 8px 32px rgba(181, 76, 239, 0.15);
+    border: 1px solid #e5e7eb;
+}
+
+.dinner-form {
+    display: grid;
+    gap: 1.5rem;
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+}
+
+.form-label {
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+    color: #374151;
+}
+
+.form-input {
+    padding: 0.75rem 1rem;
+    border: 2px solid #e5e7eb;
+    border-radius: 8px;
+    font-size: 1rem;
+    transition: border-color 0.2s ease;
+}
+
+.form-input:focus {
+    outline: none;
+    border-color: #b54cef;
+    box-shadow: 0 0 0 3px rgba(181, 76, 239, 0.1);
+}
+
+.form-input:invalid {
+    border-color: #ef4444;
+}
+
+/* Radio Group */
+.radio-group {
+    display: flex;
+    gap: 1rem;
+    margin-top: 0.5rem;
+}
+
+.radio-label {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    cursor: pointer;
+    font-weight: normal;
+}
+
+.radio-input {
+    width: 1.2rem;
+    height: 1.2rem;
+}
+
+.radio-text {
+    font-size: 1rem;
+}
+
+/* Checkbox Group */
+.checkbox-group {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 0.75rem;
+    margin-top: 0.5rem;
+    padding: 1rem;
+    background: #faf5ff;
+    border: 2px solid #e5e7eb;
+    border-radius: 8px;
+}
+
+.checkbox-label {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    cursor: pointer;
+    font-weight: 400;
+    padding: 0.5rem;
+    border-radius: 6px;
+    transition: background-color 0.2s ease;
+}
+
+.checkbox-label:hover {
+    background: #f3e8ff;
+}
+
+.checkbox-input {
+    width: 1.25rem;
+    height: 1.25rem;
+    accent-color: #b54cef;
+}
+
+.checkbox-text {
+    font-size: 0.95rem;
+    color: #374151;
+}
+
+/* Buttons */
+.form-actions {
+    display: flex;
+    gap: 1rem;
+    margin-top: 1rem;
+}
+
+.btn {
+    padding: 0.75rem 1.5rem;
+    border: none;
+    border-radius: 8px;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    min-height: 48px; /* Touch-friendly */
+}
+
+.btn--primary {
+    background: linear-gradient(135deg, #b54cef 0%, #9333ea 100%);
+    color: white;
+}
+
+.btn--primary:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 16px rgba(181, 76, 239, 0.4);
+}
+
+.btn--secondary {
+    background: #6b7280;
+    color: white;
+}
+
+.btn--secondary:hover {
+    background: #4b5563;
+}
+
+.btn--danger {
+    background: #ef4444;
+    color: white;
+    padding: 0.5rem 1rem;
+    font-size: 0.875rem;
+}
+
+.btn--danger:hover {
+    background: #dc2626;
+}
+
+.btn--edit {
+    background: #f59e0b;
+    color: white;
+    padding: 0.5rem 1rem;
+    font-size: 0.875rem;
+}
+
+.btn--edit:hover {
+    background: #d97706;
+}
+
+/* Form Messages */
+.form-message {
+    padding: 1rem;
+    border-radius: 8px;
+    margin-top: 1rem;
+    font-weight: 500;
+}
+
+.form-message--success {
+    background-color: #d1fae5;
+    color: #065f46;
+    border: 1px solid #a7f3d0;
+}
+
+.form-message--error {
+    background-color: #fee2e2;
+    color: #991b1b;
+    border: 1px solid #fca5a5;
+}
+
+/* Dinners Section */
+.dinners-section {
+    background: white;
+    padding: 2rem;
+    border-radius: 16px;
+    box-shadow: 0 8px 32px rgba(181, 76, 239, 0.15);
+    border: 1px solid #e5e7eb;
+}
+
+.dinners-list {
+    display: grid;
+    gap: 1rem;
+}
+
+.dinner-card {
+    background: #f8f9fa;
+    border: 2px solid #e5e7eb;
+    border-radius: 8px;
+    padding: 1.5rem;
+    transition: border-color 0.2s ease;
+}
+
+.dinner-card:hover {
+    border-color: #b54cef;
+}
+
+.dinner-card__header {
+    display: flex;
+    justify-content: between;
+    align-items: start;
+    margin-bottom: 1rem;
+}
+
+.dinner-card__date {
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: #2c3e50;
+}
+
+.dinner-card__time {
+    font-size: 1rem;
+    color: #6b7280;
+    margin-top: 0.25rem;
+}
+
+.dinner-card__actions {
+    display: flex;
+    gap: 0.5rem;
+    margin-left: auto;
+}
+
+.dinner-card__details {
+    display: grid;
+    gap: 0.75rem;
+}
+
+.dinner-card__restaurant {
+    font-weight: 600;
+    color: #374151;
+}
+
+.dinner-card__address {
+    color: #6b7280;
+    font-size: 0.875rem;
+}
+
+.dinner-card__slots {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    align-items: center;
+}
+
+.dinner-card__slot-info {
+    background: #ffec37;
+    color: #000000;
+    padding: 0.25rem 0.75rem;
+    border-radius: 20px;
+    font-size: 0.875rem;
+    font-weight: 500;
+}
+
+.dinner-card__reservation {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.reservation-status {
+    font-weight: 600;
+}
+
+.reservation-status--yes {
+    color: #059669;
+}
+
+.reservation-status--no {
+    color: #dc2626;
+}
+
+/* Empty State */
+.empty-state {
+    text-align: center;
+    padding: 3rem 1rem;
+    color: #6b7280;
+}
+
+.empty-state p {
+    font-size: 1.1rem;
+}
+
+/* Responsive Design */
+@media (min-width: 768px) {
+    .header__title {
+        font-size: 2.5rem;
+    }
+    
+    .main {
+        grid-template-columns: 1fr 1fr;
+        gap: 2rem;
+    }
+    
+    .form-actions {
+        flex-direction: row;
+    }
+    
+    .dinner-card__header {
+        flex-direction: row;
+        align-items: center;
+    }
+}
+
+@media (max-width: 767px) {
+    .container {
+        padding: 0 0.5rem;
+    }
+    
+    .dinner-form-section,
+    .dinners-section {
+        padding: 1.5rem;
+    }
+    
+    .form-actions {
+        flex-direction: column;
+    }
+    
+    .btn {
+        width: 100%;
+    }
+    
+    .dinner-card__actions {
+        margin-left: 0;
+        margin-top: 1rem;
+        justify-content: flex-start;
+    }
+    
+    .radio-group {
+        flex-direction: column;
+        gap: 0.75rem;
+    }
+    
+    .checkbox-group {
+        grid-template-columns: 1fr;
+        gap: 0.5rem;
+    }
+    
+    .checkbox-label {
+        padding: 0.75rem 0.5rem;
+    }
+} 
