@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Restaurant Club Planner</title>
+    <link rel="stylesheet" href="styles/main.css">
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <h1 class="header__title">🍽️ Restaurant Club Planner</h1>
+            <p class="header__subtitle">Coordinate your weekly restaurant adventures</p>
+        </header>
+
+        <main class="main">
+            <!-- Dinner Creation Form -->
+            <section class="dinner-form-section">
+                <h2 class="section-title">Schedule New Dinner</h2>
+                <form id="dinner-form" class="dinner-form">
+                    <div class="form-group">
+                        <label for="dinner-date" class="form-label">Date</label>
+                        <input type="date" id="dinner-date" name="date" class="form-input" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="dinner-time" class="form-label">Time</label>
+                        <input type="time" id="dinner-time" name="time" class="form-input" value="19:00" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="restaurant-name" class="form-label">Restaurant Name</label>
+                        <input type="text" id="restaurant-name" name="restaurantName" class="form-input" placeholder="Enter restaurant name (optional)">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="restaurant-address" class="form-label">Restaurant Address</label>
+                        <input type="text" id="restaurant-address" name="restaurantAddress" class="form-input" placeholder="Enter address (optional)">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="reserved-slots" class="form-label">Reserved Slots (comma-separated names)</label>
+                        <input type="text" id="reserved-slots" name="reservedSlots" class="form-input" placeholder="John, Jane, Bob">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="open-slots" class="form-label">Number of Open Slots</label>
+                        <input type="number" id="open-slots" name="openSlots" class="form-input" min="0" max="20" value="3">
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">Reservation Made?</label>
+                        <div class="radio-group">
+                            <label class="radio-label">
+                                <input type="radio" name="reservationMade" value="true" class="radio-input">
+                                <span class="radio-text">Yes</span>
+                            </label>
+                            <label class="radio-label">
+                                <input type="radio" name="reservationMade" value="false" class="radio-input" checked>
+                                <span class="radio-text">No</span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="form-actions">
+                        <button type="submit" class="btn btn--primary">Create Dinner</button>
+                        <button type="button" id="cancel-btn" class="btn btn--secondary" style="display: none;">Cancel Edit</button>
+                    </div>
+                </form>
+
+                <div id="form-message" class="form-message" style="display: none;"></div>
+            </section>
+
+            <!-- Upcoming Dinners List -->
+            <section class="dinners-section">
+                <h2 class="section-title">Upcoming Dinners</h2>
+                <div id="dinners-list" class="dinners-list">
+                    <div class="empty-state">
+                        <p>No dinners scheduled yet. Create one above! 👆</p>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <script src="js/data-models.js"></script>
+    <script src="js/dinner-scheduler.js"></script>
+</body>
+</html> 
